@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование профиля</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .header:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0;
+        }
+
+        .page-title::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 1.75rem;
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #64748b;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: #e2e8f0;
+        }
+
+        .back-link:hover {
+            color: #3b82f6;
+            background: #f1f5f9;
+            transform: translateY(-2px);
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 0.75rem;
+            font-size: 0.925rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .input-field.has-error {
+            border-color: #ef4444;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .submit-btn {
+            background: #3b82f6;
+            color: white;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .submit-btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1.25rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+
+            .input-field {
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 class="page-title">📝 Редактирование профиля</h1>
+        <a th:href="@{/people/{id}(id=${person.getId()})}" class="back-link">
+            <i class="fas fa-chevron-left"></i>
+            <span>Назад к профилю</span>
+        </a>
+    </div>
+
+    <form class="form-card" th:method="post" th:action="@{/people/{id}(id=${person.getId()})}" th:object="${person}">
+        <input type="hidden" name="_method" value="patch"/>
+
+        <div class="form-group">
+            <label class="form-label" for="fullName">
+                Полное имя
+            </label>
+            <input
+                    type="text"
+                    class="input-field"
+                    th:classappend="${#fields.hasErrors('fullName')} ? 'has-error'"
+                    th:field="*{fullName}"
+                    id="fullName"
+                    placeholder="Иван Иванов"
+            >
+            <div th:if="${#fields.hasErrors('fullName')}" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:errors="*{fullName}"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="birthYear">
+                Год рождения
+            </label>
+            <input
+                    type="number"
+                    class="input-field"
+                    th:classappend="${#fields.hasErrors('birthYear')} ? 'has-error'"
+                    th:field="*{birthYear}"
+                    id="birthYear"
+                    placeholder="1990"
+                    min="1900"
+                    max="2024"
+            >
+            <div th:if="${#fields.hasErrors('birthYear')}" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:errors="*{birthYear}"></span>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">
+            <i class="fas fa-save"></i>
+            Сохранить изменения
+        </button>
+    </form>
+</div>
+</body>
+</html>

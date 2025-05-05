@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            color: #1e293b;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .header:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0;
+        }
+
+        .page-title::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 1.75rem;
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #64748b;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: #e2e8f0;
+        }
+
+        .back-link:hover {
+            color: #3b82f6;
+            background: #f1f5f9;
+            transform: translateY(-2px);
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 2rem;
+        }
+
+        .detail-item {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .detail-item:hover {
+            background: #f1f5f9;
+            transform: translateX(4px);
+        }
+
+        .detail-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #e0f2fe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0369a1;
+            font-size: 1.25rem;
+        }
+
+        .detail-content {
+            flex-grow: 1;
+        }
+
+        .detail-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .books-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .book-list {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .book-item {
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .book-item:hover {
+            background: #f1f5f9;
+            transform: translateX(4px);
+            border-color: #3b82f6;
+        }
+
+        .book-icon {
+            color: #3b82f6;
+            font-size: 1.25rem;
+        }
+
+        .no-books {
+            color: #64748b;
+            font-style: italic;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1.25rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .detail-item {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .detail-icon {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 class="page-title">👤 Профиль пользователя</h1>
+        <a th:href="@{/people}" class="back-link">
+            <i class="fas fa-chevron-left"></i>
+            <span>Назад к списку</span>
+        </a>
+    </div>
+
+    <div class="profile-card">
+        <div class="detail-item">
+            <div class="detail-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="detail-content">
+                <div class="detail-label">Полное имя</div>
+                <div class="detail-value" th:text="${person.getFullName()}"></div>
+            </div>
+        </div>
+
+        <div class="detail-item">
+            <div class="detail-icon">
+                <i class="fas fa-calendar"></i>
+            </div>
+            <div class="detail-content">
+                <div class="detail-label">Год рождения</div>
+                <div class="detail-value" th:text="${person.getBirthYear()}"></div>
+            </div>
+        </div>
+
+        <div class="books-section">
+            <div class="detail-label" th:text="${!books.isEmpty()} ? 'Список книг:' : 'Человек пока не взял ни одной книги'"></div>
+            <div class="book-list" th:if="${!books.isEmpty()}">
+                <a th:href="@{/books/{id}(id=${book.getId()})}"
+                   class="book-item"
+                   th:each="book : ${books}">
+                    <i class="fas fa-book book-icon"></i>
+                    <span th:text="${book.getTitle()}"></span>
+                </a>
+            </div>
+        </div>
+
+        <div class="actions">
+            <form th:method="get" th:action="@{/people/{id}/update(id=${person.getId()})}">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-edit"></i>
+                    Редактировать
+                </button>
+            </form>
+
+            <form th:method="delete" th:action="@{/people/{id}(id=${person.getId()})}">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i>
+                    Удалить
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

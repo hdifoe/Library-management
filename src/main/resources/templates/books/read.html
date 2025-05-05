@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Просмотр книги</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            color: #1e293b;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .header:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0;
+        }
+
+        .page-title::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 1.75rem;
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #64748b;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: #e2e8f0;
+        }
+
+        .back-link:hover {
+            color: #3b82f6;
+            background: #f1f5f9;
+            transform: translateY(-2px);
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 2rem;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #fecaca;
+            font-weight: 500;
+        }
+
+        .detail-item {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .detail-item:hover {
+            background: #f1f5f9;
+            transform: translateX(4px);
+        }
+
+        .detail-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #e0f2fe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0369a1;
+            font-size: 1.25rem;
+        }
+
+        .detail-content {
+            flex-grow: 1;
+        }
+
+        .detail-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .owner-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .form-section {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .form-section:hover {
+            background: #f1f5f9;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        .btn-disabled {
+            background: #fee2e2;
+            color: #dc2626;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .btn-disabled:hover {
+            background: #fee2e2;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-tooltip {
+            position: relative;
+        }
+
+        .btn-tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.5rem 1rem;
+            background: #1e293b;
+            color: white;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+            display: none;
+        }
+
+        .btn-disabled.btn-tooltip::after {
+            display: block;
+        }
+
+        .btn-tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1.25rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .detail-item {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .detail-icon {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 class="page-title">📖 Детали книги</h1>
+        <a th:href="@{/books}" class="back-link">
+            <i class="fas fa-chevron-left"></i>
+            <span>Назад к списку</span>
+        </a>
+    </div>
+
+    <div class="book-card">
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+        <div class="detail-item">
+            <div class="detail-icon">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="detail-content">
+                <div class="detail-label">Название</div>
+                <div class="detail-value" th:text="${book.getTitle()}"></div>
+            </div>
+        </div>
+
+        <div class="detail-item">
+            <div class="detail-icon">
+                <i class="fas fa-user-edit"></i>
+            </div>
+            <div class="detail-content">
+                <div class="detail-label">Автор</div>
+                <div class="detail-value" th:text="${book.getAuthor()}"></div>
+            </div>
+        </div>
+
+        <div class="detail-item">
+            <div class="detail-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="detail-content">
+                <div class="detail-label">Год издания</div>
+                <div class="detail-value" th:text="${book.getPublicationYear()}"></div>
+            </div>
+        </div>
+
+        <div class="owner-section">
+            <div class="detail-item">
+                <div class="detail-icon">
+                    <i class="fas fa-user-tag"></i>
+                </div>
+                <div class="detail-content">
+                    <div class="detail-label">Владелец книги</div>
+                    <div class="detail-value" th:text="${person} ? ${person.getFullName()} : 'Нет (эта книга свободна)'"></div>
+                </div>
+            </div>
+
+            <div class="form-section" th:if="${person}">
+                <form th:method="patch" th:action="@{/books/{id}/change_owner(id=${book.getId()})}">
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-unlink"></i>
+                        Освободить книгу
+                    </button>
+                </form>
+            </div>
+
+            <div class="form-section" th:if="${people}">
+                <form th:method="patch" th:action="@{/books/{id}/change_owner(id=${book.getId()})}">
+                    <div class="form-group">
+                        <label class="detail-label">Новый владелец</label>
+                        <select id="personId" name="personId">
+                            <option th:each="person : ${people}"
+                                    th:value="${person.getId()}"
+                                    th:text="${person.getFullName()}"></option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-link"></i>
+                        Назначить книгу
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="actions">
+            <form th:method="get" th:action="@{/books/{id}/update(id=${book.getId()})}">
+                <button type="submit" 
+                        class="btn btn-primary btn-tooltip" 
+                        th:classappend="${book.getPerson() != null} ? 'btn-disabled'"
+                        th:disabled="${book.getPerson() != null}"
+                        th:data-tooltip="${book.getPerson() != null} ? 'Сначала нужно освободить книгу' : ''">
+                    <i class="fas fa-edit"></i>
+                    Редактировать
+                </button>
+            </form>
+
+            <form th:method="delete" th:action="@{/books/{id}(id=${book.getId()})}">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i>
+                    Удалить
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

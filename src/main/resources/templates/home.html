@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Selection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .dashboard-container {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-icon {
+            width: 80px;
+            height: 80px;
+            background: #3b82f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .dashboard-label {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-description {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            .dashboard-title {
+                font-size: 2rem;
+            }
+
+            .dashboard-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <h1 class="dashboard-title">Management Dashboard</h1>
+    <p class="dashboard-description">Select a category to manage</p>
+
+    <div class="dashboard-grid">
+        <a href="/people" class="dashboard-card">
+            <div class="dashboard-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="dashboard-label">People Management</div>
+            <div class="dashboard-description">
+                Manage user profiles, edit personal information, and track user activity
+            </div>
+        </a>
+
+        <a href="/books" class="dashboard-card">
+            <div class="dashboard-icon">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <div class="dashboard-label">Books Management</div>
+            <div class="dashboard-description">
+                Manage book catalog, update inventory, and track book status
+            </div>
+        </a>
+    </div>
+</div>
+</body>
+</html>

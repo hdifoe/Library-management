@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список людей</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            color: #1e293b;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .header:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0;
+        }
+
+        .page-title::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 1.75rem;
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #e2e8f0;
+            color: #0f172a;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .home-button:hover {
+            background: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        .create-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .create-button:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        .search-form {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-button {
+            background: #3b82f6;
+            color: white;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-button:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        .people-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .person-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            border: 1px solid #e2e8f0;
+        }
+
+        .person-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            border-color: #3b82f6;
+        }
+
+        .person-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+            transition: color 0.3s ease;
+        }
+
+        .person-card:hover .person-name {
+            color: #3b82f6;
+        }
+
+        .person-details {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .person-year {
+            background: #f1f5f9;
+            padding: 0.25rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #475569;
+            transition: all 0.3s ease;
+        }
+
+        .person-card:hover .person-year {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1.25rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .people-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-buttons {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .home-button,
+            .create-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 class="page-title">👥 Список людей</h1>
+        <div class="nav-buttons">
+            <a th:href="@{/}" class="home-button">
+                <i class="fas fa-home"></i>
+                На главную
+            </a>
+            <a th:href="@{/people/create}" class="create-button">
+                <i class="fas fa-user-plus"></i>
+                Добавить человека
+            </a>
+        </div>
+    </div>
+
+    <form th:action="@{/people}" method="get" class="search-form">
+        <input type="text" 
+               name="search" 
+               th:value="${search}" 
+               class="search-input" 
+               placeholder="Поиск по имени..."
+               autocomplete="off">
+        <button type="submit" class="search-button">
+            <i class="fas fa-search"></i>
+            Найти
+        </button>
+    </form>
+
+    <div class="people-grid">
+        <a th:each="person : ${people}"
+           th:href="@{/people/{id}(id=${person.getId()})}"
+           class="person-card">
+            <div class="person-name" th:text="${person.getFullName()}"></div>
+            <div class="person-details">
+                <i class="fas fa-calendar"></i>
+                <span class="person-year" th:text="${person.getBirthYear()}"></span>
+            </div>
+        </a>
+    </div>
+</div>
+</body>
+</html>
