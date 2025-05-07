@@ -12,7 +12,7 @@
 
 ## Технический стек
 
-- Java 17
+- Java 24
 - Spring Boot
 - Spring Data JPA
 - PostgreSQL
